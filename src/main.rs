@@ -8,20 +8,20 @@ use std::fs::File;
 use std::io;
 use std::io::Read;
 
+// ? placed after a Result enum value; if the value is an Ok variant, the value inside
+// the Ok will get returned from this expression & the program will continue.
+// If the value is an Err variant, Err will be returned from the whole function as if
+// return keyword was used & propagated to the calling code.
+//
+// Error values that have the ? operator called upon them go through the `from` function,
+// defined w/i the `From` trait, that is used to convert errors from one type to another.
+// The error type is converted into the error type defined w/i the return type of the current
+// function.
 fn read_username_from_file_1() -> Result<String, io::Error> {
-    let f = File::open("hello.txt");
-    let mut f = match f {
-        Ok(file) => file,
-        Err(e) => return Err(e), // here we return early from the fn & pass the error value 
-        // from File::open back to the calling code as this fn's error value.
-    };
-
+    let mut f = File::open("hello.txt")?;
     let mut s = String::new();
-
-    match f.read_to_string(&mut s) {
-        Ok(_) => Ok(s),
-        Err(e) => Err(e), // here, no need to explicitly return, since this is the last expression.
-    }
+    f.read_to_string(&mut s)?;
+    Ok(s)
 }
 
 fn main() {
