@@ -4,24 +4,11 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
-use std::fs::File;
+use std::fs;
 use std::io;
-use std::io::Read;
 
 fn read_username_from_file_1() -> Result<String, io::Error> {
-    let f = File::open("hello.txt");
-    let mut f = match f {
-        Ok(file) => file,
-        Err(e) => return Err(e), // here we return early from the fn & pass the error value 
-        // from File::open back to the calling code as this fn's error value.
-    };
-
-    let mut s = String::new();
-
-    match f.read_to_string(&mut s) {
-        Ok(_) => Ok(s),
-        Err(e) => Err(e), // here, no need to explicitly return, since this is the last expression.
-    }
+    fs::read_to_string("hello.txt")
 }
 
 fn main() {
